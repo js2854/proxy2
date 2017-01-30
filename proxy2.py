@@ -1,3 +1,4 @@
+#!/usr/bin/env python
 # -*- coding: utf-8 -*-
 import sys
 import os
@@ -238,8 +239,9 @@ class ProxyRequestHandler(BaseHTTPRequestHandler):
             data = text
         elif encoding in ('gzip', 'x-gzip'):
             io = StringIO()
-            with gzip.GzipFile(fileobj=io, mode='wb') as f:
-                f.write(text)
+            f =  gzip.GzipFile(fileobj=io, mode='wb')
+            f.write(text)
+            f.close()
             data = io.getvalue()
         elif encoding == 'deflate':
             data = zlib.compress(text)
@@ -252,8 +254,9 @@ class ProxyRequestHandler(BaseHTTPRequestHandler):
             text = data
         elif encoding in ('gzip', 'x-gzip'):
             io = StringIO(data)
-            with gzip.GzipFile(fileobj=io) as f:
-                text = f.read()
+            f = gzip.GzipFile(fileobj=io)
+            text = f.read()
+            f.close()
         elif encoding == 'deflate':
             try:
                 text = zlib.decompress(data)
